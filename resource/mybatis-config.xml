@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE configuration
+  PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-config.dtd">
+<!--mybatis核心配置文件 -->
+<configuration>
+	<!--引入数据库连接参数配置文件*.properties -->
+	<properties resource="mysqldb.properties"></properties>
+	<!--设置mybatis运行行为 -->
+	<settings>
+		<setting name="autoMappingBehavior" value="FULL" />
+		<!-- 懒加载开关 -->
+		<setting name="lazyLoadingEnabled" value="true" />
+
+		<!-- 打开二级缓存 -->
+		<setting name="cacheEnabled" value="true" />
+		<!-- 指定日志 -->
+		<setting name="logImpl" value="LOG4J" />
+	</settings>
+
+
+
+	<!--给实体类pojo取一个别名 -->
+	<typeAliases>
+		<package name="com.cssl.pojo" />
+	</typeAliases>
+
+	<!--添加分页插件 -->
+
+	<plugins>
+		<plugin interceptor="com.github.pagehelper.PageHelper">
+			<!--方言 <property name="dialect" value="mysql"/> -->
+
+			<!-- pageSize=0相当于没有执行分页查询，但是返回结果仍然是Page类型 -->
+			<property name="pageSizeZero" value="true" />
+			<!-- 启用合理化时，如果pageNum<1或pageNum>pages会返回首页或尾页 -->
+			<property name="reasonable" value="true" />
+		</plugin>
+	</plugins>
+
+	<!--环境设置 default：development 开发环境, test 测试环境 -->
+	<environments default="development">
+		<!--开发环境连接信息 -->
+		<environment id="development">
+			<!--事务管理：jdbc -->
+			<transactionManager type="JDBC" />
+			<!--数据源：池化技术 -->
+			<dataSource type="POOLED">
+				<!--数据库连接四个参数 -->
+				<property name="driver" value="${driver}" />
+				<property name="url" value="${url}" />
+				<property name="username" value="${username}" />
+				<property name="password" value="${password}" />
+			</dataSource>
+		</environment>
+
+		<!-- 测试数据库 -->
+		<environment id="test">
+			<transactionManager type="JDBC" />
+			<dataSource type="POOLED">
+				<property name="driver" value="${driver}" />
+				<property name="url" value="${url}" />
+				<property name="username" value="${username}" />
+				<property name="password" value="${password}" />
+			</dataSource>
+		</environment>
+	</environments>
+	<!-- sql 语句用xx.xml保存，指定sql文件的位置 -->
+	<mappers>
+		<!-- <mapper resource="com/cssl/mapper/StudentMapper.xml"/> <mapper resource="com/cssl/mapper/StudentMapper.xml"/> 
+			<mapper resource="com/cssl/mapper/StudentMapper.xml"/> -->
+		<!-- 将包内的映射器接口全部注册为映射器 -->
+		<package name="com/cssl/mapper" />
+	</mappers>
+</configuration>
